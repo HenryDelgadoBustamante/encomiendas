@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-3">
+    <div class="col-md-9">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 fw-bold text-dark"><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>{{ titulo }}</h4>
+            </div>
+            <div class="card-body p-4 p-md-5">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.remitente.id_for_label }}" class="form-label">Remitente</label>
+                            {{ form.remitente }}
+                            {% if form.remitente.errors %}
+                                <div class="text-danger small">{{ form.remitente.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.destinatario.id_for_label }}" class="form-label">Destinatario</label>
+                            {{ form.destinatario }}
+                            {% if form.destinatario.errors %}
+                                <div class="text-danger small">{{ form.destinatario.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.descripcion.id_for_label }}" class="form-label">Descripción de la encomienda</label>
+                        {{ form.descripcion }}
+                        {% if form.descripcion.errors %}
+                            <div class="text-danger small">{{ form.descripcion.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="{{ form.peso_kg.id_for_label }}" class="form-label">Peso (kg)</label>
+                            {{ form.peso_kg }}
+                            {% if form.peso_kg.errors %}
+                                <div class="text-danger small">{{ form.peso_kg.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="{{ form.volumen_cm3.id_for_label }}" class="form-label">Volumen (cm³)</label>
+                            {{ form.volumen_cm3 }}
+                            {% if form.volumen_cm3.errors %}
+                                <div class="text-danger small">{{ form.volumen_cm3.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <label for="{{ form.ruta.id_for_label }}" class="form-label">Ruta Asignada</label>
+                            {{ form.ruta }}
+                            {% if form.ruta.errors %}
+                                <div class="text-danger small">{{ form.ruta.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.observaciones.id_for_label }}" class="form-label">Observaciones (Opcional)</label>
+                        {{ form.observaciones }}
+                        {% if form.observaciones.errors %}
+                            <div class="text-danger small">{{ form.observaciones.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'envios:lista' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-success">Guardar Encomienda</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
