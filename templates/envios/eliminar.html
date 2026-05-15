@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Encomienda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body">
+                <p>¿Estás seguro de que deseas eliminar la encomienda <strong>{{ encomienda.codigo }}</strong>?</p>
+                <ul>
+                    <li><strong>Descripción:</strong> {{ encomienda.descripcion }}</li>
+                    <li><strong>Remitente:</strong> {{ encomienda.remitente }}</li>
+                    <li><strong>Destinatario:</strong> {{ encomienda.destinatario }}</li>
+                    <li><strong>Estado:</strong> {{ encomienda.get_estado_display }}</li>
+                </ul>
+                <p class="text-danger"><small>Esta acción no se puede deshacer.</small></p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'envios:lista' %}" class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">Sí, eliminar encomienda</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

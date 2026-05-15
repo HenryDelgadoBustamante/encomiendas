@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle de Encomienda {{ encomienda.codigo }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-md-8">
+        <h2>Detalles de la Encomienda: {{ encomienda.codigo }}</h2>
+    </div>
+    <div class="col-md-5 text-end">
+        <a href="{% url 'envios:lista' %}" class="btn btn-secondary">Listado</a>
+        <a href="{% url 'envios:cambiar_estado' encomienda.id %}" class="btn btn-info text-white">Cambiar Estado</a>
+        <a href="{% url 'envios:editar' encomienda.id %}" class="btn btn-warning">Editar</a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Información Principal -->
+    <div class="col-md-8">
+        <div class="card mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Información General</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Estado actual:</div>
+                    <div class="col-sm-9">
+                        <span class="badge bg-{% if encomienda.estado == 'PEN' %}warning{% elif encomienda.estado == 'ENT' %}success{% else %}info{% endif %} fs-6">
+                            {{ encomienda.get_estado_display }}
+                        </span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Descripción:</div>
+                    <div class="col-sm-9">{{ encomienda.descripcion }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Dimensiones:</div>
+                    <div class="col-sm-9">{{ encomienda.peso_kg }} kg {% if encomienda.volumen_cm3 %}| {{ encomienda.volumen_cm3 }} cm³{% endif %}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Costo Envío:</div>
+                    <div class="col-sm-9 fw-bold text-success">S/ {{ encomienda.costo_envio }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Ruta:</div>
+                    <div class="col-sm-9">{{ encomienda.ruta.nombre }}</div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-3 text-muted">Fechas:</div>
+                    <div class="col-sm-9">
+                        <p class="mb-1"><strong>Registro:</strong> {{ encomienda.fecha_registro|date:"d/m/Y H:i" }}</p>
+                        <p class="mb-1"><strong>Estimada:</strong> {% if encomienda.fecha_entrega_est %}{{ encomienda.fecha_entrega_est|date:"d/m/Y H:i" }}{% else %}No definida{% endif %}</p>
+                        <p class="mb-0"><strong>Real:</strong> {% if encomienda.fecha_entrega_real %}{{ encomienda.fecha_entrega_real|date:"d/m/Y H:i" }}{% else %}Pendiente{% endif %}</p>
+                    </div>
+                </div>
+                {% if encomienda.observaciones %}
+                <div class="row">
+                    <div class="col-sm-3 text-muted">Observaciones:</div>
+                    <div class="col-sm-9">{{ encomienda.observaciones }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Remitente</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>{{ encomienda.remitente }}</strong></p>
+                        <p class="mb-1"><small>DNI/RUC: {{ encomienda.remitente.numero_documento }}</small></p>
+                        <p class="mb-0"><small>{{ encomienda.remitente.telefono }} | {{ encomienda.remitente.email }}</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header bg-secondary text-white">
+                        <h6 class="mb-0">Destinatario</h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-1"><strong>{{ encomienda.destinatario }}</strong></p>
+                        <p class="mb-1"><small>DNI/RUC: {{ encomienda.destinatario.numero_documento }}</small></p>
+                        <p class="mb-0"><small>{{ encomienda.destinatario.telefono }} | {{ encomienda.destinatario.email }}</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de Estados -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Historial de Estados</h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for h in historial %}
+                    <li class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ h.get_estado_nuevo_display }}</h6>
+                            <small class="text-muted">{{ h.fecha_cambio|date:"d/m/Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1 small">Actualizado por: {{ h.empleado.nombres }}</p>
+                        {% if h.observacion %}
+                        <small class="text-muted fst-italic">"{{ h.observacion }}"</small>
+                        {% endif %}
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-center text-muted">
+                        No hay cambios de estado registrados.
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
